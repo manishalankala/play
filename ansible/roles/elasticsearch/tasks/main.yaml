@@ -1,0 +1,24 @@
+- name: Create elastic search volume
+  docker_volume:
+    name: esdata
+    driver: local
+- name: Start elastic search container
+  docker_container:
+    name: "{{ elasticsearch_hostname }}"
+    image: "{{ elasticsearch_image }}"
+    env:
+      discovery.type: "single-node"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      xpack.security.enabled: "true"
+      xpack.monitoring.collection.enabled: "true"
+    volumes:
+    - "esdata:/usr/share/elasticsearch/data"
+    ulimits:
+    - nofile:65535:65535
+    networks:
+    - name: "{{ network_name }}"
+    state: started
+    log_driver: "{{ log_driver }}"
+    log_options:
+      max-size: "{{ log_max_size }}"
+      max-file: "{{ log_max_file }}"
