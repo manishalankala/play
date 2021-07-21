@@ -18,4 +18,6 @@
     networks:
     - name: "{{ network_name }}"
     state: started
-
+    log_options:
+      max-size: "{{ log_max_size }}"
+      max-file: "{{ log_max_file }}"
