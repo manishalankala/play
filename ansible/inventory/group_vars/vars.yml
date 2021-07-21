@@ -33,8 +33,8 @@ heartbeat_hostname: hb01
 heartbeat_servername: status.mysite.com
 heartbeat_conf_dir: /usr/share/heartbeat
 heartbeat_urls:
-- https://example.com
-- https://status.example.com
+- https://mysite.com
+- https://status.mysite.com
 
 #####################
 ### mericbeat ###
