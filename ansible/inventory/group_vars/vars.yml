@@ -30,7 +30,7 @@ logstash_conf_dir: /usr/share/logstash
 
 heartbeat_image: docker.elastic.co/beats/heartbeat:7.13.3
 heartbeat_hostname: hb01
-heartbeat_servername: status.example.com
+heartbeat_servername: status.mysite.com
 heartbeat_conf_dir: /usr/share/heartbeat
 heartbeat_urls:
 - https://example.com
@@ -42,7 +42,7 @@ heartbeat_urls:
 
 metricbeat_image: docker.elastic.co/beats/metricbeat:7.13.3
 metricbeat_hostname: mb01
-metricbeat_servername: status.example.com
+metricbeat_servername: status.mysite.com
 metricbeat_conf_dir: /usr/share/metricbeat
 
 
