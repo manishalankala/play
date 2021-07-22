@@ -1,6 +1,5 @@
 ---
-- hosts:
-    - 13.66.54.119
+- hosts: 13.66.54.119
   become: true
   roles:
   - { role: elasticsearch, tags: ["elasticsearch"] }
