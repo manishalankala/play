@@ -1,8 +1,7 @@
 ---
 - hosts: [managed-node1]
-- vars :
-    pem_file: 
-    |1|wPLhmIb9MWPsxa/xtS0SMxLiS3A=|+5DBJcrLAaAxz8yWZt0+NQKGAQ4= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBB0kVJrf4JFxpRUpBaycprubsZ6H5ax8Md6qaTCVfEIbA1rN95Ln3/WGMzYm0fq/0Cf5y4sjaZ5q3TZBv2Z1LUI=
+  vars :
+    pem_file: |1|wPLhmIb9MWPsxa/xtS0SMxLiS3A=|+5DBJcrLAaAxz8yWZt0+NQKGAQ4= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBB0kVJrf4JFxpRUpBaycprubsZ6H5ax8Md6qaTCVfEIbA1rN95Ln3/WGMzYm0fq/0Cf5y4sjaZ5q3TZBv2Z1LUI=
   become: false
   remote_user: azureuser
   roles:
