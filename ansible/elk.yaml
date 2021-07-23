@@ -1,6 +1,6 @@
 ---
 - hosts: [managed-node1]
-  become: true
+  become: flase
   roles:
   - { role: elasticsearch, tags: ["elasticsearch"] }
   - { role: kibana, tags: ["kibana"] }
