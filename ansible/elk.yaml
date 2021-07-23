@@ -1,5 +1,6 @@
 ---
 - hosts: [managed-node1]
+  
   become: false
   remote_user: azureuser
   roles:
