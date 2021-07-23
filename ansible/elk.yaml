@@ -1,6 +1,7 @@
 ---
 - hosts: [managed-node1]
-  become: flase
+  become: false
+  remote_user: azureuser
   roles:
   - { role: elasticsearch, tags: ["elasticsearch"] }
   - { role: kibana, tags: ["kibana"] }
