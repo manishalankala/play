@@ -1,5 +1,5 @@
 ---
-- hosts: [managed-node2]
+- hosts: [a]
   become: false
   remote_user: azureuser
   roles:
