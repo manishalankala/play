@@ -63,3 +63,6 @@ sudo systemctl start jenkins
 sudo systemctl status jenkins
 
 ~~~
+
+
+![image](https://user-images.githubusercontent.com/33985509/127038871-eb1d3376-c800-439b-8659-aadc9424b365.png)
