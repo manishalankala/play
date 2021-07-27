@@ -1,5 +1,5 @@
 ---
-- hosts: [b]
+- hosts: 52.176.53.115
   become: false
   remote_user: azureuser
   roles:
