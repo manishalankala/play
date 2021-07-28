@@ -6,8 +6,8 @@
 - name: Copy logstash pipeline conf
   template: src={{ item.src }} dest={{ item.dest }}
   with_items:
-    - { src: 'https://github.com/manishalankala/play/blob/main/ansible/syslog.conf', dest: '/opt/pipeline/syslog.conf' }
-    - { src: 'https://github.com/manishalankala/play/blob/main/ansible/beats.conf', dest: '/opt/pipeline/beats.conf' }
+    - { src: 'play/blob/main/ansible/syslog.conf', dest: '/opt/pipeline/syslog.conf' }
+    - { src: 'play/blob/main/ansible/beats.conf', dest: '/opt/pipeline/beats.conf' }
   notify: Restart logstash container
 
 - name: Start logstash container
