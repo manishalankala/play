@@ -33,5 +33,18 @@ fatal: [localhost]: FAILED! => {"changed": false, "msg": "Failed to import the r
 
 sol : pip install docker-py
 
+
+
+Error connecting: Error while fetching server API version: ('Connection aborted.', PermissionError(13, 'Permission denied'))
+
+sol: https://stackoverflow.com/questions/42211380/add-insecure-registry-to-docker
+
+DOCKER_OPTS="--insecure-registry=13.65.213.184 --insecure-registry=52.171.37.226"
+
+chmod 666 /var/run/docker.sock
+
+sudo systemctl daemon-reload
+
+sudo systemctl restart docker
 ~~~
 
