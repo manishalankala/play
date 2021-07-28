@@ -1,5 +1,5 @@
 ---
-- hosts: 52.171.37.226
+- hosts: [allservers]
   become: false
   remote_user: azureuser
   roles:
