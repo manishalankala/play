@@ -12,22 +12,22 @@
 
 - name: Start logstash container
   docker_container:
-    name: "{{ logstash_hostname }}"
-    image: "{{ logstash_image }}"
+    name: "lo01"
+    image: "docker.elastic.co/logstash/logstash:7.13.3"
     env:
-      XPACK_MONITORING_ELASTICSEARCH_HOSTS: "http://{{ elasticsearch_hostname }}:9200"
+      XPACK_MONITORING_ELASTICSEARCH_HOSTS: "http://es01:9200"
       XPACK_MONITORING_ENABLED: "true"
       XPACK_MONITORING_ELASTICSEARCH_USERNAME: "elastic"
-      XPACK_MONITORING_ELASTICSEARCH_PASSWORD: "{{ elastic_password }}"
+      XPACK_MONITORING_ELASTICSEARCH_PASSWORD: "password"
       PATH_CONFIG: ""
     ports:
     - 5000:5000
     - 5044:5044
     volumes:
-    - "{{ logstash_conf_dir }}/pipeline:/usr/share/logstash/pipeline:ro"
+    - "{{ logstash_conf_dir }}/pipeline:/usr/share/logstash/pipeline"
     networks:
-    - name: "{{ network_name }}"
-    log_driver: "{{ log_driver }}"
+    - name: "bridge"
+    log_driver: "json-file"
     log_options:
-      max-size: "{{ log_max_size }}"
-      max-file: "{{ log_max_file }}"
+      max-size: "10m"
+      max-file: "3"
