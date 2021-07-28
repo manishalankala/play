@@ -1,15 +1,15 @@
 - name: Start kibana container
   docker_container:
-    name: "{{ kibana_hostname }}"
-    image: "{{ kibana_image }}"
+    name: "ki01"
+    image: "docker.elastic.co/kibana/kibana:7.13.3"
     env:
-      servername: "{{ server_name }}"
-      ELASTICSEARCH_HOSTS: "http://{{ elasticsearch_hostname }}:9200"
+      servername: "kibana"
+      ELASTICSEARCH_HOSTS: "http://es01:9200"
       ELASTICSEARCH_USERNAME: "kibana"
-      ELASTICSEARCH_PASSWORD: "{{ kibana_password }}"
+      ELASTICSEARCH_PASSWORD: "password"
     networks:
-    - name: "{{ network_name }}"
-    log_driver: "{{ log_driver }}"
+    - name: "bridge"
+    log_driver: "json-file"
     log_options:
-      max-size: "{{ log_max_size }}"
-      max-file: "{{ log_max_file }}"
+      max-size: "10m"
+      max-file: "3"
