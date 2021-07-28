@@ -4,8 +4,8 @@
     driver: local
 - name: Start elastic search container
   docker_container:
-    name: "{{ elasticsearch_hostname }}"
-    image: "{{ elasticsearch_image }}"
+    name: "es01"
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.13.3"
     env:
       discovery.type: "single-node"
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
@@ -16,8 +16,9 @@
     ulimits:
     - nofile:65535:65535
     networks:
-    - name: "{{ network_name }}"
+    - name: "bridge"
     state: started
+    log_driver: "json-file"
     log_options:
-      max-size: "{{ log_max_size }}"
-      max-file: "{{ log_max_file }}"
+      max-size: "10m"
+      max-file: "3"
