@@ -46,5 +46,9 @@ chmod 666 /var/run/docker.sock
 sudo systemctl daemon-reload
 
 sudo systemctl restart docker
+
+
+TASK [elasticsearch : Start elastic search container] **************************
+fatal: [localhost]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: 'elasticsearch_hostname' is undefined\n\nThe error appears to be in '/var/lib/jenkins/workspace/play/ansible/roles/elasticsearch/tasks/main.yaml': line 5, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n    driver: local\n- name: Start elastic search container\n  ^ here\n"}
 ~~~
 
