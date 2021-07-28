@@ -1,5 +1,5 @@
 ---
-- hosts: [allservers]
+- hosts: [localhost]
   become: false
   remote_user: azureuser
   roles:
