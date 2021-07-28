@@ -1,13 +1,13 @@
 - name: Ensure logstash pipeline conf dir exists
   file:
-    path: "{{ logstash_conf_dir }}/pipeline"
+    path: "opt/pipeline"
     state: directory
 
 - name: Copy logstash pipeline conf
   template: src={{ item.src }} dest={{ item.dest }}
   with_items:
-    - { src: 'templates/syslog.conf', dest: '/{{ logstash_conf_dir }}/pipeline/syslog.conf' }
-    - { src: 'templates/beats.conf', dest: '/{{ logstash_conf_dir }}/pipeline/beats.conf' }
+    - { src: 'templates/syslog.conf', dest: '/opt/pipeline/syslog.conf' }
+    - { src: 'templates/beats.conf', dest: '/opt/pipeline/beats.conf' }
   notify: Restart logstash container
 
 - name: Start logstash container
@@ -24,7 +24,7 @@
     - 5000:5000
     - 5044:5044
     volumes:
-    - "{{ logstash_conf_dir }}/pipeline:/usr/share/logstash/pipeline"
+    - "opt/pipeline:/usr/share/logstash/pipeline"
     networks:
     - name: "bridge"
     log_driver: "json-file"
