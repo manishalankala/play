@@ -227,9 +227,9 @@ resource "kubernetes_stateful_set" "zookeeper" {
       }
       spec {
         access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "k_storage_class_name"
+        storage_class_name = "standard"
         resources {
-          requests = { storage = "k_zookeeper_storage_size}" }
+          requests = { storage = "1Gi" }
         }
       }
     }
