@@ -23,16 +23,16 @@ resource "kubernetes_service" "zookeeper_headless" {
       port        = 2888
       target_port = "server"
     }
-    selector   = { app = "${var.kafka_name}-zookeeper" }
+    selector   = { app = "k-zookeeper" }
     cluster_ip = "None"
   }
 }
 
 resource "kubernetes_service" "zookeeper" {
   metadata {
-    name      = "${var.kafka_name}-zookeeper"
-    namespace = "${var.namespace}"
-    labels    = { app = "${var.kafka_name}-zookeeper" }
+    name      = "$k-zookeeper"
+    namespace = "kk"
+    labels    = { app = "k-zookeeper" }
   }
   spec {
     port {
@@ -41,16 +41,16 @@ resource "kubernetes_service" "zookeeper" {
       port        = 2181
       target_port = "client"
     }
-    selector = { app = "${var.kafka_name}-zookeeper" }
+    selector = { app = "k-zookeeper" }
     type     = "ClusterIP"
   }
 }
 
 resource "kubernetes_service" "kafka" {
   metadata {
-    name      = "${var.kafka_name}"
-    namespace = "${var.namespace}"
-    labels    = { app = "${var.kafka_name}" }
+    name      = "k"
+    namespace = "kk"
+    labels    = { app = "k" }
   }
   spec {
     port {
@@ -58,15 +58,15 @@ resource "kubernetes_service" "kafka" {
       port        = 9092
       target_port = "kafka"
     }
-    selector = { app = "${var.kafka_name}" }
+    selector = { app = "k" }
   }
 }
 
 resource "kubernetes_service" "kafka_headless" {
   metadata {
-    name        = "${var.kafka_name}-headless"
-    namespace   = "${var.namespace}"
-    labels      = { app = "${var.kafka_name}" }
+    name        = "k-headless"
+    namespace   = "kk"
+    labels      = { app = "k" }
     annotations = { "service.alpha.kubernetes.io/tolerate-unready-endpoints" = "true" }
   }
   spec {
@@ -74,31 +74,31 @@ resource "kubernetes_service" "kafka_headless" {
       name = "broker"
       port = 9092
     }
-    selector   = { app = "${var.kafka_name}" }
+    selector   = { app = "k" }
     cluster_ip = "None"
   }
 }
 
 resource "kubernetes_stateful_set" "zookeeper" {
   metadata {
-    name      = "${var.kafka_name}-zookeeper"
-    namespace = "${var.namespace}"
+    name      = "k-zookeeper"
+    namespace = "kk"
     labels    = { app = "${var.kafka_name}-zookeeper", component = "server" }
   }
   spec {
     replicas = "${var.zookeeper_cluster_size}"
     selector {
-      match_labels = { app = "${var.kafka_name}-zookeeper", component = "server" }
+      match_labels = { app = "k-zookeeper", component = "server" }
     }
     template {
       metadata {
-        labels = { app = "${var.kafka_name}-zookeeper", component = "server" }
+        labels = { app = "k-zookeeper", component = "server" }
       }
       spec {
         volume {
           name = "config"
           config_map {
-            name         = "${var.kafka_name}-zookeeper"
+            name         = "k-zookeeper"
             default_mode = "0555"
           }
         }
@@ -227,13 +227,13 @@ resource "kubernetes_stateful_set" "zookeeper" {
       }
       spec {
         access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "${var.zookeeper_storage_class_name}"
+        storage_class_name = "k_storage_class_name"
         resources {
-          requests = { storage = "${var.zookeeper_storage_size}" }
+          requests = { storage = "k_zookeeper_storage_size}" }
         }
       }
     }
-    service_name = "${var.kafka_name}-zookeeper-headless"
+    service_name = "k-zookeeper-headless"
     update_strategy {
       type = "RollingUpdate"
     }
@@ -242,18 +242,18 @@ resource "kubernetes_stateful_set" "zookeeper" {
 
 resource "kubernetes_stateful_set" "kafka" {
   metadata {
-    name      = "${var.kafka_name}"
-    namespace = "${var.namespace}"
-    labels    = { app = "${var.kafka_name}" }
+    name      = "k"
+    namespace = "kk"
+    labels    = { app = "k" }
   }
   spec {
-    replicas = "${var.cluster_size}"
+    replicas = "1"
     selector {
-      match_labels = { app = "${var.kafka_name}" }
+      match_labels = { app = "k" }
     }
     template {
       metadata {
-        labels = { app = "${var.kafka_name}" }
+        labels = { app = "k" }
       }
       spec {
         container {
@@ -364,13 +364,13 @@ resource "kubernetes_stateful_set" "kafka" {
       }
       spec {
         access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "${var.kafka_storage_class_name}"
+        storage_class_name = "standard"
         resources {
-          requests = { storage = "${var.kafka_storage_size}" }
+          requests = { storage = "1Gi" }
         }
       }
     }
-    service_name          = "${var.kafka_name}-headless"
+    service_name          = "k-headless"
     pod_management_policy = "OrderedReady"
     update_strategy {
       type = "OnDelete"
@@ -381,29 +381,29 @@ resource "kubernetes_stateful_set" "kafka" {
 resource "kubernetes_deployment" "kafka_rest" {
   count = var.kafka_rest_enabled ? 1 : 0
   metadata {
-    name      = "${var.kafka_name}-rest"
-    namespace = "${var.namespace}"
+    name      = "k-rest"
+    namespace = "kk"
     labels = {
-      app     = "${var.kafka_name}-rest"
-      release = "${var.kafka_name}-rest"
+      app     = "k-rest"
+      release = "k-rest"
     }
   }
 
   spec {
-    replicas = var.kafka_rest_replicacount
+    replicas = 1
 
     selector {
       match_labels = {
-        app     = "${var.kafka_name}-rest"
-        release = "${var.kafka_name}-rest"
+        app     = "k-rest"
+        release = "k-rest"
       }
     }
 
     template {
       metadata {
         labels = {
-          app     = "${var.kafka_name}-rest"
-          release = "${var.kafka_name}-rest"
+          app     = "k-rest"
+          release = "k-rest"
         }
 
         annotations = {
@@ -417,7 +417,7 @@ resource "kubernetes_deployment" "kafka_rest" {
           name = "jmx-config"
 
           config_map {
-            name = "${var.kafka_name}-rest-jmx-configmap"
+            name = "k-rest-jmx-configmap"
           }
         }
 
@@ -439,8 +439,8 @@ resource "kubernetes_deployment" "kafka_rest" {
         }
 
         container {
-          name  = "${var.kafka_name}-rest-server"
-          image = "confluentinc/cp-kafka-rest:${var.confluent_kafka_version}"
+          name  = "k-rest-server"
+          image = "confluentinc/cp-kafka-rest:5.4.0"
 
           port {
             name           = "rest-proxy"
@@ -465,12 +465,12 @@ resource "kubernetes_deployment" "kafka_rest" {
 
           env {
             name  = "KAFKA_REST_ZOOKEEPER_CONNECT"
-            value = "${var.kafka_name}-zookeeper-headless:2181"
+            value = "k-zookeeper-headless:2181"
           }
 
           env {
             name  = "KAFKA_REST_SCHEMA_REGISTRY_URL"
-            value = "${var.kafka_name}-schema-registry:8081"
+            value = "k-schema-registry:8081"
           }
 
           env {
@@ -493,11 +493,11 @@ resource "kubernetes_deployment" "kafka_rest" {
 resource "kubernetes_ingress" "kafka_rest_ingress" {
   count = var.kafka_rest_enabled && var.kafka_rest_ingress_enabled ? 1 : 0
   metadata {
-    name      = "${var.kafka_name}-rest-ingress"
-    namespace = "${var.namespace}"
+    name      = "k-rest-ingress"
+    namespace = "kk"
     labels = {
-      app     = "${var.kafka_name}-rest"
-      release = "${var.kafka_name}-rest"
+      app     = "l-rest"
+      release = "k-rest"
     }
 
     annotations = {
@@ -508,19 +508,19 @@ resource "kubernetes_ingress" "kafka_rest_ingress" {
 
   spec {
     tls {
-      hosts       = ["${var.kafka_rest_ingress_host}"]
-      secret_name = "${var.namespace}-tls-cert"
+      hosts       = ["mydearhost.io"]
+      secret_name = "kk-tls-cert"
     }
 
     rule {
-      host = "${var.kafka_rest_ingress_host}"
+      host = "mydearhost.io"
 
       http {
         path {
-          path = "/${var.kafka_rest_endpoint}(/|$)(.*)"
+          path = "/kafka(/|$)(.*)"
 
           backend {
-            service_name = "${var.kafka_name}-rest-service"
+            service_name = "k-rest-service"
             service_port = "8082"
           }
         }
@@ -532,11 +532,11 @@ resource "kubernetes_ingress" "kafka_rest_ingress" {
 resource "kubernetes_service" "kafka_rest_service" {
   count = var.kafka_rest_enabled ? 1 : 0
   metadata {
-    name      = "${var.kafka_name}-rest-service"
-    namespace = "${var.namespace}"
+    name      = "k-rest-service"
+    namespace = "kk"
     labels = {
-      app     = "${var.kafka_name}-rest"
-      release = "${var.kafka_name}-rest"
+      app     = "k-rest"
+      release = "k-rest"
     }
   }
 
@@ -547,8 +547,8 @@ resource "kubernetes_service" "kafka_rest_service" {
     }
 
     selector = {
-      app     = "${var.kafka_name}-rest"
-      release = "${var.kafka_name}-rest"
+      app     = "k-rest"
+      release = "k-rest"
     }
   }
 }
@@ -557,11 +557,11 @@ resource "kubernetes_service" "kafka_rest_service" {
 resource "kubernetes_config_map" "kafka_rest_jmx_configmap" {
   count = var.kafka_rest_enabled ? 1 : 0
   metadata {
-    name      = "${var.kafka_name}-rest-jmx-configmap"
-    namespace = "${var.namespace}"
+    name      = "k-rest-jmx-configmap"
+    namespace = "kk"
     labels = {
-      app     = "${var.kafka_name}-rest"
-      release = "${var.kafka_name}-rest"
+      app     = "k-rest"
+      release = "k-rest"
     }
   }
 
