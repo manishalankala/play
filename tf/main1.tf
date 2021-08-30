@@ -107,3 +107,14 @@ resource "azurerm_app_service_slot" "my_app_service_container_staging" {
    type  = "SQLServer"
    value = "Server=some-server.mydomain.com;Integrated Security=SSPI"
 }
+
+
+
+resource "azurerm_application_insights" "my_app_insight" {
+ name                = "my_app_insight"
+ location            = "France central"
+ resource_group_name = "MYRG"
+ application_type    = "Node.JS" # Depends on your application
+ disable_ip_masking  = true
+ retention_in_days   = 730
+}
