@@ -63,19 +63,15 @@ resource "azurerm_app_service" "my_app_service_container" {
  site_config {
    scm_type  = "VSTSRM".  # or can be "LocalGit"
    always_on = "true"
-
    linux_fx_version  = "DOCKER|arc01.azurecr.io/myapp:latest" 
    health_check_path = "/health" # health check required in order that internal app service plan loadbalancer do not loadbalance on instance down
  }
-
  identity {
    type         = "SystemAssigned, UserAssigned"
    identity_ids = [data.azurerm_user_assigned_identity.assigned_identity_acr_pull.id]
  }
-
  app_settings = local.env_variables 
 }
-
  connection_string {
    name  = "Database"
    type  = "SQLServer"
@@ -100,15 +96,12 @@ resource "azurerm_app_service_slot" "my_app_service_container_staging" {
    always_on         = "true"
    health_check_path = "/login"
  }
-
  identity {
    type         = "SystemAssigned, UserAssigned"
    identity_ids = [data.azurerm_user_assigned_identity.assigned_identity_acr_pull.id]
  }
-
  app_settings = local.env_variables 
 }
-
  connection_string {
    name  = "Database"
    type  = "SQLServer"
