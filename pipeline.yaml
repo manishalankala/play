@@ -1,0 +1,59 @@
+trigger:
+ - master
+pr:
+ branches:
+   include:
+     - master
+
+stages:
+ - stage: CI
+   displayName: CI
+   jobs:
+     - job: Tests
+       displayName: Tests
+       pool:
+         vmImage: ubuntu-latest
+       steps:
+         - template: tests.yaml
+     - job: Build_scan_push
+       displayName: Build scan push docker images
+       condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+       pool:
+         vmImage: ubuntu-latest
+       steps:
+         - template: build.yaml
+         - template: scan.yaml
+         - template: push.yaml
+
+ - stage: CD
+   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+   dependsOn: CI
+   jobs:
+     - deployment: Deployment
+       displayName: Deploy container in Prod
+       pool:
+         vmImage: ubuntu-latest
+       environment:
+         name: prod
+       strategy:
+         runOnce:
+           deploy:
+             steps:
+               - task: AzureWebAppContainer@1
+                 displayName: "Azure App Service Container Deploy"
+                 inputs:
+                   azureSubscription: "service_connection_name"
+                   appName: "app_service_name"
+                   containers: acr01.azurecr.io/image_name:latest
+                   deployToSlotOrASE: true
+                   resourceGroupName: "MYRG"
+                   slotName: "staging"
+           routeTraffic:
+             steps:
+               - task: AzureAppServiceManage@0
+                 displayName: "Azure App Service Deploy - switch slots"
+                 inputs:
+                   azureSubscription: "service_connection_name"
+                   ResourceGroupName: "MYRG"
+                   WebAppName: "app_service_name"
+                   SourceSlot: production
